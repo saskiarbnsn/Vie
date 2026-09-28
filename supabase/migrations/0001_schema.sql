@@ -156,6 +156,12 @@ create index on composicion_corporal (medido_en);
 -- ─────────────────────────────────────────────────────────────
 -- Seguridad: la app es de una sola usuaria. Solo alguien autenticado
 -- puede leer o escribir; sin sesión, la API de Supabase no devuelve nada.
+--
+-- Dos capas:
+--   1. Permisos (GRANT): el proyecto se crea SIN exponer tablas nuevas
+--      automáticamente, así que cada tabla se habilita a mano y solo para
+--      el rol `authenticated`. El rol `anon` (sin sesión) no recibe nada.
+--   2. RLS: aunque alguien tuviera permiso, cada fila pasa por una política.
 -- ─────────────────────────────────────────────────────────────
 
 do $$
@@ -166,6 +172,7 @@ begin
     'entrenos_planificados', 'recetas', 'comidas', 'habitos_diarios',
     'composicion_corporal', 'recordatorios'
   ] loop
+    execute format('grant select, insert, update, delete on %I to authenticated', t);
     execute format('alter table %I enable row level security', t);
     execute format(
       'create policy "solo usuaria autenticada" on %I for all to authenticated using (true) with check (true)', t);
