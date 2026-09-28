@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+/* Paleta del prototipo aprobado en Claude Design */
+:root {
+  --marfil: #faf9f5;
+  --pizarra: #141413;
+  --gris: #6b6a65;
+  --borde: #e8e6dc;
+  --terracota: #d97757;
+}
+
+@theme inline {
+  --color-marfil: var(--marfil);
+  --color-pizarra: var(--pizarra);
+  --color-gris: var(--gris);
+  --color-borde: var(--borde);
+  --color-terracota: var(--terracota);
+  --font-serif: ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  background: var(--marfil);
+  color: var(--pizarra);
+  font-family: var(--font-sans);
+}
