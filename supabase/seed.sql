@@ -1,5 +1,5 @@
 -- Vie · datos iniciales
--- Se corre una sola vez, después de 0001_schema.sql.
+-- Se corre una sola vez, después del schema.
 
 -- Historial de períodos exportado de P.C. (Period Calendar), feb–sep 2026.
 insert into periodos (fecha_inicio, fecha_fin) values

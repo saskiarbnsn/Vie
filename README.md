@@ -29,7 +29,7 @@ Los datos que llegan de Apple Salud tienen `external_id` único, para que reenvi
 ## Cómo levantarlo
 
 1. Crear un proyecto en [Supabase](https://supabase.com).
-2. En el **SQL Editor**, correr `supabase/migrations/0001_schema.sql` y después `supabase/seed.sql`.
+2. En el **SQL Editor**, correr `supabase/migrations/20260927000000_schema.sql` y después `supabase/seed.sql`.
 3. Copiar `.env.example` como `.env.local` y completar la URL y la anon key (Project Settings → API).
 4. `npm install` y `npm run dev`.
 
