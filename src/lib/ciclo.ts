@@ -46,6 +46,22 @@ export function hoyEnCordoba(): string {
   }).format(new Date());
 }
 
+/** Hora actual en Córdoba, como "HH:MM". */
+export function horaEnCordoba(): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "America/Argentina/Cordoba",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date());
+}
+
+/** Día de la semana ISO (1 = lunes … 7 = domingo) de una fecha "YYYY-MM-DD". */
+export function diaSemanaIso(fecha: string): number {
+  const d = new Date(aDia(fecha) * MS_DIA).getUTCDay();
+  return d === 0 ? 7 : d;
+}
+
 /** Promedio de duración de los últimos ciclos completos. */
 export function duracionMedia(periodos: Periodo[]): number {
   const inicios = periodos.map((p) => aDia(p.fecha_inicio)).sort((a, b) => a - b);
