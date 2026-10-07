@@ -30,13 +30,28 @@ const DURACION_POR_DEFECTO = 26;
 
 const MS_DIA = 86_400_000;
 
-function aDia(fecha: string): number {
+export function aDia(fecha: string): number {
   const [a, m, d] = fecha.split("-").map(Number);
   return Date.UTC(a, m - 1, d) / MS_DIA;
 }
 
-function aFecha(dia: number): string {
+export function aFecha(dia: number): string {
   return new Date(dia * MS_DIA).toISOString().slice(0, 10);
+}
+
+export function sumarDias(fecha: string, dias: number): string {
+  return aFecha(aDia(fecha) + dias);
+}
+
+/** Lunes de la semana de una fecha. */
+export function lunesDe(fecha: string): string {
+  return sumarDias(fecha, 1 - diaSemanaIso(fecha));
+}
+
+/** Las 7 fechas (lunes a domingo) de la semana de una fecha. */
+export function semanaDe(fecha: string): string[] {
+  const lunes = lunesDe(fecha);
+  return Array.from({ length: 7 }, (_, i) => sumarDias(lunes, i));
 }
 
 /** Fecha de hoy en Córdoba, como "YYYY-MM-DD". */
@@ -103,5 +118,76 @@ export function estadoCiclo(periodos: Periodo[], hoy: string = hoyEnCordoba()): 
     duracionMedia: media,
     proximoPeriodo: aFecha(proximo),
     diasHastaProximo,
+  };
+}
+
+/** Duración de los ciclos completos, del más viejo al más nuevo. */
+export function duracionesDeCiclos(periodos: Periodo[]): { inicio: string; dias: number }[] {
+  const inicios = periodos.map((p) => p.fecha_inicio).sort();
+  return inicios.slice(1).map((inicio, i) => ({
+    inicio: inicios[i],
+    dias: aDia(inicio) - aDia(inicios[i]),
+  }));
+}
+
+export type Segmento = { fase: Fase; desde: number; hasta: number };
+
+/**
+ * Días del ciclo (1 = primer día del período) que ocupa cada fase,
+ * con las mismas reglas que `estadoCiclo`.
+ */
+export function segmentosDelCiclo(duracion: number, diasPeriodo = 5): Segmento[] {
+  const ovulacion = duracion - 14 + 1;
+  const premenstrual = duracion - DIAS_PREMENSTRUAL + 1;
+  const tramos: Segmento[] = [
+    { fase: "menstrual", desde: 1, hasta: diasPeriodo },
+    { fase: "folicular", desde: diasPeriodo + 1, hasta: ovulacion - 2 },
+    { fase: "ovulatoria", desde: ovulacion - 1, hasta: ovulacion + 1 },
+    { fase: "lutea", desde: ovulacion + 2, hasta: premenstrual - 1 },
+    { fase: "premenstrual", desde: premenstrual, hasta: duracion },
+  ];
+  return tramos.filter((t) => t.hasta >= t.desde);
+}
+
+/** Días que duró el último período (5 si sigue abierto). */
+export function diasDelUltimoPeriodo(periodos: Periodo[], hoy: string = hoyEnCordoba()): number {
+  const ultimo = periodos
+    .filter((p) => p.fecha_inicio <= hoy)
+    .sort((a, b) => a.fecha_inicio.localeCompare(b.fecha_inicio))
+    .at(-1);
+  if (!ultimo?.fecha_fin) return 5;
+  return aDia(ultimo.fecha_fin) - aDia(ultimo.fecha_inicio) + 1;
+}
+
+export type FaseDelDia = { fase: Fase; estimada: boolean; inicioEstimado: boolean };
+
+/**
+ * Fase de cualquier día de la semana, incluso futuro. Pasado el próximo
+ * período estimado, el día se marca como período estimado.
+ */
+export function faseDelDia(periodos: Periodo[], fecha: string, hoy: string = hoyEnCordoba()): FaseDelDia | null {
+  const base = estadoCiclo(periodos, fecha <= hoy ? fecha : hoy);
+  if (!base) return null;
+  if (fecha <= hoy) return { fase: base.fase, estimada: false, inicioEstimado: false };
+  const dias = aDia(fecha) - aDia(hoy);
+  const hasta = base.diasHastaProximo - dias;
+  if (hasta <= 0 && hasta > -5) {
+    return { fase: "menstrual", estimada: true, inicioEstimado: hasta === 0 };
+  }
+  const futuro = estadoCiclo(periodos, fecha);
+  return futuro ? { fase: futuro.fase, estimada: true, inicioEstimado: false } : null;
+}
+
+/** Rango probable del próximo período según el ciclo más corto y el más largo. */
+export function rangoProximoPeriodo(periodos: Periodo[], hoy: string = hoyEnCordoba()) {
+  const pasados = periodos.filter((p) => p.fecha_inicio <= hoy);
+  const ultimo = pasados.map((p) => p.fecha_inicio).sort().at(-1);
+  if (!ultimo) return null;
+  const recientes = duracionesDeCiclos(pasados).slice(-6).map((c) => c.dias);
+  if (recientes.length === 0) return null;
+  return {
+    desde: sumarDias(ultimo, Math.min(...recientes)),
+    hasta: sumarDias(ultimo, Math.max(...recientes)),
+    variacion: Math.max(...recientes) - Math.min(...recientes),
   };
 }
