@@ -15,7 +15,7 @@ export async function planificarEntreno(form: FormData) {
     origen: "manual",
   });
   if (error) throw new Error(error.message);
-  revalidatePath("/");
+  revalidatePath("/", "layout");
 }
 
 /** Marca un entreno como hecho, salteado o lo vuelve a pendiente. */
@@ -26,7 +26,7 @@ export async function cambiarEstadoEntreno(form: FormData) {
     .update({ estado: String(form.get("estado")) })
     .eq("id", Number(form.get("id")));
   if (error) throw new Error(error.message);
-  revalidatePath("/");
+  revalidatePath("/", "layout");
 }
 
 /** Borra un entreno planificado a mano (los de la rutina se saltean, no se borran). */
@@ -38,7 +38,7 @@ export async function borrarEntreno(form: FormData) {
     .eq("id", Number(form.get("id")))
     .eq("origen", "manual");
   if (error) throw new Error(error.message);
-  revalidatePath("/");
+  revalidatePath("/", "layout");
 }
 
 async function leerHabitos(fecha: string) {
@@ -59,7 +59,7 @@ export async function sumarAgua(form: FormData) {
     .from("habitos_diarios")
     .upsert({ fecha, agua_ml, creatina: actual.creatina });
   if (error) throw new Error(error.message);
-  revalidatePath("/");
+  revalidatePath("/", "layout");
 }
 
 export async function alternarCreatina() {
@@ -69,5 +69,5 @@ export async function alternarCreatina() {
     .from("habitos_diarios")
     .upsert({ fecha, agua_ml: actual.agua_ml, creatina: !actual.creatina });
   if (error) throw new Error(error.message);
-  revalidatePath("/");
+  revalidatePath("/", "layout");
 }

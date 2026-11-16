@@ -14,6 +14,7 @@ export type EntrenoDelDia = {
   duracion_min: number;
   estado: "pendiente" | "hecho" | "salteado";
   origen: "rutina" | "manual";
+  exigencia?: "alta" | "media" | "baja" | null;
 };
 
 export type Bloque = { entrenos: EntrenoDelDia[]; inicio: number; fin: number };

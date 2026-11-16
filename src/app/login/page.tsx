@@ -18,7 +18,7 @@ export default function Login() {
           autoComplete="email"
           placeholder="Email"
           required
-          className="rounded-xl border border-borde bg-white px-4 py-3"
+          className="rounded-xl border border-borde bg-tarjeta px-4 py-3"
         />
         <input
           name="password"
@@ -26,12 +26,12 @@ export default function Login() {
           autoComplete="current-password"
           placeholder="Contraseña"
           required
-          className="rounded-xl border border-borde bg-white px-4 py-3"
+          className="rounded-xl border border-borde bg-tarjeta px-4 py-3"
         />
-        {estado.error && <p className="text-sm text-terracota">{estado.error}</p>}
+        {estado.error && <p className="text-sm text-bordo">{estado.error}</p>}
         <button
           disabled={enviando}
-          className="mt-2 rounded-xl bg-pizarra px-4 py-3 text-marfil disabled:opacity-60"
+          className="mt-2 rounded-xl bg-bordo px-4 py-3 font-semibold text-white disabled:opacity-60"
         >
           {enviando ? "Entrando…" : "Entrar"}
         </button>

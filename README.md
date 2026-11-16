@@ -20,8 +20,10 @@ Criterio: **lo que se carga se guarda; lo que se deduce se calcula.** La fase de
 
 - **Ciclo:** `periodos` (inicio y fin de cada período) y `registro_ciclo` (flujo, síntomas y ánimo por día).
 - **Entrenamiento:** `rutina_semanal` (clases de horario fijo), `entrenos_planificados` (lo que pienso hacer) y `entrenos_realizados` (lo que hice, del Watch o manual). Planificado y realizado van separados: el plan permite avisar el pre entreno *antes*, y el Watch confirma *después*.
+- **Exigencia:** `disciplinas` guarda la exigencia habitual de cada deporte. Se ajusta por semana (`ajustes_semana`, descarga de gym), por período (`preferencias`), por turno (columna `exigencia`) y por cómo me siento ese día (`energia_diaria`). La exigencia decide qué pre entreno sugiere Vie.
+- **Gym:** `sesiones_gym` y `series_gym` (ejercicio, kilos, repeticiones y si la serie se hizo).
 - **Nutrición:** `comidas`, `recetas` (Cookidoo, Instagram o propias) y `habitos_diarios` (agua, creatina).
-- **Cuerpo:** `composicion_corporal` (Femmto → Apple Salud).
+- **Cuerpo:** `composicion_corporal` con todas las métricas que muestra Femmto (Femmto → Apple Salud, o carga manual).
 - **Carga:** `recordatorios`, que abren el formulario ya prellenado.
 
 Los datos que llegan de Apple Salud tienen `external_id` único, para que reenviar el mismo export no duplique registros.
@@ -29,7 +31,7 @@ Los datos que llegan de Apple Salud tienen `external_id` único, para que reenvi
 ## Cómo levantarlo
 
 1. Crear un proyecto en [Supabase](https://supabase.com).
-2. En el **SQL Editor**, correr `supabase/migrations/20260927000000_schema.sql` y después `supabase/seed.sql`.
+2. En el **SQL Editor**, correr en este orden `supabase/migrations/20260927000000_schema.sql`, `supabase/seed.sql` y `supabase/migrations/20261007000000_entreno_ciclo_cuerpo.sql`.
 3. Copiar `.env.example` como `.env.local` y completar la URL y la publishable key (Project Settings → API Keys).
 4. `npm install` y `npm run dev`.
 
@@ -38,7 +40,13 @@ Los datos que llegan de Apple Salud tienen `external_id` único, para que reenvi
 - [x] Schema, datos iniciales y cálculo de fase del ciclo
 - [x] Login (una sola usuaria, registro público cerrado)
 - [x] Panel "Hoy": fase del ciclo, entrenos planificados, pre entreno, ajustes del plan, agua y creatina
-- [ ] Formularios de carga + recordatorios
+- [x] Diseño de Vie (Figma) y navegación con 5 secciones: Inicio, Entreno, Cuerpo, Ciclo y Comidas
+- [x] Entreno: rutina editable (solo esta semana o todas), exigencia por deporte, semana, período y turno, comidas del día según los turnos y registro de gym con series
+- [x] Ciclo: anillo de fases, recomendaciones del día, semana con fases, carga de período y síntomas, patrones y próximo período con rango
+- [x] Cuerpo: métricas de Femmto con rangos, lectura según el objetivo y carga manual de mediciones
+- [x] Comidas: el día armado según el plan y registro de comidas
+- [ ] Recordatorios (notificaciones)
+- [ ] Planner semanal y batch cooking
 - [ ] Historial con gráficos
 - [ ] Integración con Apple Salud (Health Auto Export → webhook)
 - [ ] Chat con la API de Claude

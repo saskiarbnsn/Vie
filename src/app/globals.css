@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
-/* Paleta del prototipo aprobado en Claude Design */
+/* Paleta de Vie (diseño en Figma). Los colores de fase se usan en Ciclo, Inicio y Entreno. */
 :root {
-  --marfil: #faf9f5;
-  --pizarra: #141413;
-  --gris: #6b6a65;
-  --borde: #e8e6dc;
-  --terracota: #d97757;
+  --crema: #f6efe6;
+  --tarjeta: #fffdf9;
+  --borde: #d9cbbe;
+  --linea: #ede3d8;
+  --tinta: #4a3b35;
+  --gris: #6e6058;
+  --bordo: #800039;
+  --bordo-oscuro: #5c0029;
+  --rosa: #f6e8ec;
+  --folicular: #7a9273;
+  --ovulatoria: #d69a3c;
+  --lutea: #b8687e;
+  --verde: #50694a;
+  --verde-oscuro: #2f4a2a;
+  --verde-claro: #e7ede4;
+  --ambar: #a06919;
+  --ambar-oscuro: #6b4410;
+  --ambar-claro: #fbebd2;
 }
 
 @theme inline {
-  --color-marfil: var(--marfil);
-  --color-pizarra: var(--pizarra);
-  --color-gris: var(--gris);
+  --color-crema: var(--crema);
+  --color-tarjeta: var(--tarjeta);
   --color-borde: var(--borde);
-  --color-terracota: var(--terracota);
-  --font-serif: ui-serif, Georgia, "Times New Roman", serif;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-linea: var(--linea);
+  --color-tinta: var(--tinta);
+  --color-gris: var(--gris);
+  --color-bordo: var(--bordo);
+  --color-bordo-oscuro: var(--bordo-oscuro);
+  --color-rosa: var(--rosa);
+  --color-folicular: var(--folicular);
+  --color-ovulatoria: var(--ovulatoria);
+  --color-lutea: var(--lutea);
+  --color-verde: var(--verde);
+  --color-verde-oscuro: var(--verde-oscuro);
+  --color-verde-claro: var(--verde-claro);
+  --color-ambar: var(--ambar);
+  --color-ambar-oscuro: var(--ambar-oscuro);
+  --color-ambar-claro: var(--ambar-claro);
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
-  background: var(--marfil);
-  color: var(--pizarra);
+  background: var(--crema);
+  color: var(--tinta);
   font-family: var(--font-sans);
 }
